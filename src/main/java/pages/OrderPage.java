@@ -11,14 +11,13 @@ import org.openqa.selenium.WebElement;
 import static constants.OrderPageConstants.*;
 import static locators.OrderPageLocators.*;
 
-public class OrderPage {
-    private WebDriver driver;
+public class OrderPage extends BasePage {
 
-    public OrderPage(WebDriver driver){
-        this.driver = driver;
+    public OrderPage(WebDriver driver) {
+        super(driver);
     }
 
-    public void open()  {
+    public void openOrderPage()  {
         driver.get(ORDER_PAGE_URL);
     }
 
@@ -40,7 +39,7 @@ public class OrderPage {
         }
     }
 
-    public void isClickNextButtonGoToOrderForm2True() {
+    public void clickNextButtonToGoToOrderForm2() {
         driver.findElement(GO_TO_FORM2_BUTTON).click();
         Assert.assertEquals(FORM2_HEADER,
                 driver.findElement(ORDER_FORM_HEADER).getText());
@@ -58,21 +57,24 @@ public class OrderPage {
         elementDeliveryDate.click();
     };
 
-    public void isClickOrderButtonGoToConfirmWindowTrue() {
+    public void clickOrderButtonToGoToConfirmWindow() {
         WebElement element = driver.findElement(ORDER_BUTTON);
         element.click();
         Assert.assertEquals(CONFIRM_QUESTION,
                 driver.findElement(CONFIRM_HEADER).getText());
     }
 
-    public void isClickYesConfirmWindowShowsSuccessWindowTrue() {
+    public void clickYesToConfirmOrder() {
         WebElement element = driver.findElement(YES_BUTTON);
         element.click();
-        String actual = driver.findElement(SUCCESS_HEADER).getText();
-        MatcherAssert.assertThat(actual, CoreMatchers.containsString(SUCCESS_HEADER_TEXT));
     }
 
-    public void isOrderPageTrue() {
+    public void shouldBeSuccessWindow() {
+        String actual = driver.findElement(SUCCESS_HEADER).getText();
+        MatcherAssert.assertThat(actual, CoreMatchers.containsString(SUCCESS_HEADER_TEXT));
+
+    }
+    public void shouldBeOrderPage() {
         Assert.assertEquals(FORM1_HEADER,
                 driver.findElement(ORDER_FORM_HEADER).getText());
     }

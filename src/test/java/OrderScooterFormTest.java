@@ -6,6 +6,7 @@ import org.junit.runner.OrderWith;
 import org.junit.runner.manipulation.Alphanumeric;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import pages.OrderPage;
 
 @OrderWith(Alphanumeric.class)
@@ -16,27 +17,23 @@ public class OrderScooterFormTest {
     @BeforeClass
     public static void setUpClass() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
         objOrderPage = new OrderPage(driver);
-        objOrderPage.open();
+        objOrderPage.openOrderPage();
+        objOrderPage.acceptCookies();
     }
 
     @Test
-    public void clickButtonNextCompletedForm1GoToForm2() {
+    public void orderScooterWithCorrectDataGetOrderConfirmation(){
         objOrderPage.inputDataToFieldsForm1();
-        objOrderPage.isClickNextButtonGoToOrderForm2True();
-    }
-
-    @Test
-    public void clickButtonOrderCompletedForm2ShowsConfirmWindow() {
+        objOrderPage.clickNextButtonToGoToOrderForm2();
         objOrderPage.selectDeliveryDate();
         objOrderPage.chooseRentalPeriod();
-        objOrderPage.isClickOrderButtonGoToConfirmWindowTrue();
-    }
-
-    @Test
-    public void clickButtonYesConfirmWindowShowsSuccessWindow() {
-        objOrderPage.isClickYesConfirmWindowShowsSuccessWindowTrue();
+        objOrderPage.clickOrderButtonToGoToConfirmWindow();
+        objOrderPage.clickYesToConfirmOrder();
+        objOrderPage.shouldBeSuccessWindow();
     }
 
     @AfterClass

@@ -1,6 +1,7 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -9,6 +10,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import pages.MainPage;
 import pages.OrderPage;
 
@@ -21,13 +23,19 @@ public class GoFromMainPageToOrderPageTest {
     private static MainPage objMainPage;
     private static OrderPage objOrderPage;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
         objMainPage = new MainPage(driver);
         objOrderPage = new OrderPage(driver);
-        objMainPage.open();
+    }
+
+    @Before
+    public void clearCookie() {
+        driver.manage().deleteAllCookies();
     }
 
     @Parameter
@@ -39,13 +47,15 @@ public class GoFromMainPageToOrderPageTest {
     }
 
     @Test
-    public void clickOrderButtonGoToOrderPageTrue() {
-        objMainPage.goToOrderPage(locator);
-        objOrderPage.isOrderPageTrue();
+    public void clickOrderButtonToGoToOrderPage() {
+        objMainPage.openMainPage();
+        objMainPage.acceptCookies();
+        objMainPage.clickOrderButtonToGoToOrderPage(locator);
+        objOrderPage.shouldBeOrderPage();
     }
 
-    @After
-    public void tearDown() {
+    @AfterClass
+    public static void tearDown() {
         driver.quit();
     }
 }

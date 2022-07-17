@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import pages.MainPage;
 
 import java.util.Arrays;
@@ -23,9 +24,12 @@ public class PopupListImportantQuestionsTest {
     @BeforeClass
     public static void setUpClass() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
         objMainPage = new MainPage(driver);
-        objMainPage.open();
+        objMainPage.openMainPage();
+        objMainPage.acceptCookies();
     }
 
     @Parameter
@@ -51,8 +55,9 @@ public class PopupListImportantQuestionsTest {
 
     @Test
     public void clickQuestionShowsRightAnswer() {
-        objMainPage.getAnswer(serialNumber);
-        objMainPage.isAnswerTextCorrectTrue(serialNumber, expectedAnswer);
+        objMainPage.findQuestion(serialNumber);
+        objMainPage.clickQuestionToGetAnswer(serialNumber);
+        objMainPage.shouldBeCorrectText(expectedAnswer);
     }
 
     @AfterClass
